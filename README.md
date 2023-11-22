@@ -4,10 +4,11 @@ Nginx configuration for using multiple domains on odoo
 # Installing Nginx
 ```
 sudo apt install nginx
-
+````
+````
 sudo systemctl status nginx
-```
-Install the Certbot package
+`````
+# Install the Certbot package
 ````
 sudo apt install certbot
 ````
@@ -22,9 +23,10 @@ sudo chgrp www-data /var/lib/letsencrypt
 sudo chmod g+s /var/lib/letsencrypt
 ````
 
-Put this content on:
-
+# Put this content on:
+````
 sudo nano /etc/nginx/snippets/letsencrypt.conf
+````
 ````
 location ^~ /.well-known/acme-challenge/ { allow all;
  root /var/lib/letsencrypt/; default_type
@@ -33,7 +35,9 @@ location ^~ /.well-known/acme-challenge/ { allow all;
 ````
 
 # Put this content on:
-sudo nano /etc/nginx/snippets/ssl.conf 
+````
+sudo nano /etc/nginx/snippets/ssl.conf
+````
 ````
 ssl_dhparam /etc/ssl/certs/dhparam.pem;
 ssl_session_timeout 1d; ssl_session_cache
@@ -51,24 +55,32 @@ add_header Strict-Transport-Security "max-age=15768000; includeSubdomains; prelo
 
 
 # Put this contento on:
+````
 sudo nano /etc/nginx/sites-available/YOURWEBSITE.COM
-````server { listen 80;
+````
+````
+server { listen 80;
  server_name YOURWEBSITE.COM www.YOURWEBSITE.COM;
 include snippets/letsencrypt.conf;
 } 
 ````
-
+````
 sudo ln -s /etc/nginx/sites-available/YOURWEBSITE.COM /etc/nginx/sites-enabled/
-
+````
+````
 sudo systemctl restart nginx
 
+````
+
 # Acquiring the SSL Certificate
+````
 
 sudo certbot certonly --agree-tos --email admin@YOURWEBSITE.COM --webroot -w /var/lib/letsencrypt/ -d YOURWEBSITE.COM -d www.YOURWEBSITE.COM 
-
+````
 # Auto-renew your SSL Certificate
-
-sudo nano /etc/cron.d/certbot 
+````
+sudo nano /etc/cron.d/certbot
+````
 Then we want to APPEND the following string to the END of the listing in that file:
 ````
 --renew-hook "systemctl reload nginx"
@@ -80,9 +92,10 @@ cerbot file should look something like this:
 'sleep int(rand(3600))' && certbot -q renew --renew-hook "systemctl reload nginx" 
 ````
 # Modifying your Nginx configuration to access your Odoo installation with the SSL certificate
+
 So now that we have our SSL certificate, we can update our Nginx domain definition for secure access
 and get it talking to our Odoo installation.
-
+````
 sudo nano /etc/nginx/sites-available/YOURWEBSITE.COM
-
+````
 Use yourwebsite.com template
