@@ -1,7 +1,7 @@
 # Odoo-multiple-domains-nginx-proxy
 Nginx configuration for using multiple domains on odoo
 
-Installing Nginx
+# Installing Nginx
 
 sudo apt install nginx
 
@@ -10,11 +10,11 @@ Install the Certbot package
 
 sudo apt install certbot
 
-Next, we will use the command below to create a strong key that will provide a high level of security:
+# Next, we will use the command below to create a strong key that will provide a high level of security:
 
 sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
 
-Obtaining the SSL certificate
+# Obtaining the SSL certificate:
 
 sudo mkdir -p /var/lib/letsencrypt/.well-known
 sudo chgrp www-data /var/lib/letsencrypt 
@@ -53,11 +53,11 @@ sudo ln -s /etc/nginx/sites-available/YOURWEBSITE.COM /etc/nginx/sites-enabled/
 
 sudo systemctl restart nginx
 
-Acquiring the SSL Certificate
+# Acquiring the SSL Certificate
 
 sudo certbot certonly --agree-tos --email admin@YOURWEBSITE.COM --webroot -w /var/lib/letsencrypt/ -d YOURWEBSITE.COM -d www.YOURWEBSITE.COM 
 
-Auto-renew your SSL Certificate
+# Auto-renew your SSL Certificate
 
 sudo nano /etc/cron.d/certbot 
 Then we want to APPEND the following string to the END of the listing in that file:
@@ -70,8 +70,7 @@ cerbot file should look something like this:
 0 */12 * * * root test -x /usr/bin/certbot -a \! -d /run/systemd/system && perl -e
 'sleep int(rand(3600))' && certbot -q renew --renew-hook "systemctl reload nginx" 
 
-Modifying your Nginx configuration to access your Odoo installation
-with the SSL certificate
+# Modifying your Nginx configuration to access your Odoo installation with the SSL certificate
 So now that we have our SSL certificate, we can update our Nginx domain definition for secure access
 and get it talking to our Odoo installation.
 
