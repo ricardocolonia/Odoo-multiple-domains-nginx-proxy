@@ -54,7 +54,7 @@ add_header Strict-Transport-Security "max-age=15768000; includeSubdomains; prelo
 ````
 
 
-# Put this contento on:
+# Put this content on:
 ````
 sudo nano /etc/nginx/sites-available/YOURWEBSITE.COM
 ````
