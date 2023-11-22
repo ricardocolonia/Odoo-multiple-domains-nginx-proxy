@@ -2,33 +2,39 @@
 Nginx configuration for using multiple domains on odoo
 
 # Installing Nginx
-
+```
 sudo apt install nginx
 
 sudo systemctl status nginx
+```
 Install the Certbot package
-
+````
 sudo apt install certbot
-
+````
 # Next, we will use the command below to create a strong key that will provide a high level of security:
-
+````
 sudo openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048
-
+````
 # Obtaining the SSL certificate:
-
+````
 sudo mkdir -p /var/lib/letsencrypt/.well-known
 sudo chgrp www-data /var/lib/letsencrypt 
 sudo chmod g+s /var/lib/letsencrypt
+````
+
+Put this content on:
 
 sudo nano /etc/nginx/snippets/letsencrypt.conf
-# Put this content:
+````
 location ^~ /.well-known/acme-challenge/ { allow all;
  root /var/lib/letsencrypt/; default_type
 "text/plain"; try_files $uri =404;
 } 
+````
 
+# Put this content on:
 sudo nano /etc/nginx/snippets/ssl.conf 
-# Put this content:
+````
 ssl_dhparam /etc/ssl/certs/dhparam.pem;
 ssl_session_timeout 1d; ssl_session_cache
 shared:SSL:50m; ssl_session_tickets off;
@@ -41,13 +47,16 @@ SHA256:AES128SHA:AES256-SHA:DES-CBC3-SHA:!DSS'; ssl_prefer_server_ciphers on;
 ssl_stapling on; ssl_stapling_verify on;
 resolver 8.8.8.8 8.8.4.4 valid=300s; resolver_timeout 30s;
 add_header Strict-Transport-Security "max-age=15768000; includeSubdomains; preload"; add_header X-FrameOptions SAMEORIGIN; add_header X-Content-Type-Options nosniff; 
+````
 
+
+# Put this contento on:
 sudo nano /etc/nginx/sites-available/YOURWEBSITE.COM
-# Put this content:
-server { listen 80;
+````server { listen 80;
  server_name YOURWEBSITE.COM www.YOURWEBSITE.COM;
 include snippets/letsencrypt.conf;
 } 
+````
 
 sudo ln -s /etc/nginx/sites-available/YOURWEBSITE.COM /etc/nginx/sites-enabled/
 
@@ -61,15 +70,15 @@ sudo certbot certonly --agree-tos --email admin@YOURWEBSITE.COM --webroot -w /va
 
 sudo nano /etc/cron.d/certbot 
 Then we want to APPEND the following string to the END of the listing in that file:
-
+````
 --renew-hook "systemctl reload nginx"
-
+````
 Note: You DO want to include the double quotes. If you have made the edit correctly, the entire line in the
 cerbot file should look something like this:
-
+````
 0 */12 * * * root test -x /usr/bin/certbot -a \! -d /run/systemd/system && perl -e
 'sleep int(rand(3600))' && certbot -q renew --renew-hook "systemctl reload nginx" 
-
+````
 # Modifying your Nginx configuration to access your Odoo installation with the SSL certificate
 So now that we have our SSL certificate, we can update our Nginx domain definition for secure access
 and get it talking to our Odoo installation.
