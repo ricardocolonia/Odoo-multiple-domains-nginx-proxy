@@ -1,6 +1,49 @@
 # Odoo-multiple-domains-nginx-proxy
 Nginx configuration for using multiple domains on odoo
+# New Method
+# Installing Nginx
+```
+sudo apt install nginx
+````
+````
+sudo systemctl status nginx
+`````
+# Install the Certbot package
+```
+sudo apt-get update -y
+sudo apt install snapd -y
+sudo snap install core; snap refresh core
+sudo snap install --classic certbot
+sudo apt-get install python3-certbot-nginx -y
+sudo certbot --nginx -d YOURWEBSITE.COM --noninteractive --agree-tos --email YOUR@EMAIL.COM --redirect
+sudo service nginx reload
+````
+# Nginx configuration
+Replace /etc/nginx/sites-available/YOURWEBSITE.COM with the file from:
+```
+https://raw.githubusercontent.com/ricardocolonia/Odoo-multiple-domains-nginx-proxy/main/nginx%20configuration%20websocket%20working
+```
+Comment with # 
+```
+ssl_certificate /etc/letsencrypt/live/yourwebsite2.com/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/yourwebsite2.com/privkey.pem;
+```
+Before running 
+```
+sudo certbot --nginx -d YOURWEBSITE.COM --noninteractive --agree-tos --email YOUR@EMAIL.COM --redirect
+```
+For the second domain
 
+Uncomment 
+```
+ssl_certificate /etc/letsencrypt/live/yourwebsite2.com/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/yourwebsite2.com/privkey.pem;
+```
+```
+sudo service nginx reload
+```
+
+# Old Method
 # Installing Nginx
 ```
 sudo apt install nginx
